@@ -1,0 +1,78 @@
+Table:  users
+          - first_name:string
+          - last_name:string
+          - dob:date
+          - email:string
+          - bank_account_number:string
+          - encrypted_password:string
+          - stripe_customer_id:string
+          - has_one :studio
+          - has_one :address, as: :addressable
+
+        studios
+          - name:string
+          - details:text
+          - minimum_booking:int
+          - hours:string
+          - past_clients:string
+          - audio_sample:string
+          - amenities:string
+          - main_equipment:string
+          - studio_rules:string
+          - address:string
+          - appartment:string
+          - price_per_hour:decimal
+          - audio_engineer_included:boolean
+          - active:boolean
+          has_and_belongs_to_many :studio_types
+          has_many :photos, as: :imageable
+          has_many :bookings
+
+        studio_type
+          - name
+          has_and_belongs_to_many: studios
+
+        studios_studio_types
+          - studio_id:int
+          - studio_type:int
+          belongs_to :studio
+          belongs_to :studio_types
+
+        photos
+          - name:string
+          - imageable_id:int
+          - imageable_type:string
+          belongs_to :imageable, polymorphic: true
+
+        bookings
+          - booking_date:date
+          - start_time:datetime
+          - end_time:datetime
+          - studio_id
+          - user_id
+          - price_per_hour:decimal
+          - subtotal:decimal
+          - studiotime_fee:decimal
+          - total_booking_price:decimal
+          - booking_note:text
+          - status:int #enum
+          belongs_to :studio
+          belongs_to :user
+
+        payments
+          - stripe_charge_id:string
+          - booking_id:int
+          - amount:decimal
+          - status:int #enum
+          has_one :address, as: :addressable #for storing billing address
+          belongs_to :booking
+
+        addresses
+          - addressable_id:int
+          - addressable_type:string
+          - country:string
+          - address:string
+          - postal_code:string
+          - city:string
+          belongs_to :addressable, polymorphic: true
+
